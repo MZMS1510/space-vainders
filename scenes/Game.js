@@ -1,3 +1,5 @@
+import { game } from "../main.js";
+
 export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
@@ -27,10 +29,17 @@ export default class Game extends Phaser.Scene {
 
     // Criação dos diamantes
     this.diamondsPositions.objects.forEach((diamond) => {
-      this.diamonds
-        .create(diamond.x, diamond.y, "tiles-spritesheet", 67)
-        .setOrigin(0)
-        .refreshBody();
+      if (game.device.os.desktop) {
+        this.diamonds
+          .create(diamond.x, diamond.y, "tiles-spritesheet", 67)
+          .setOrigin(0)
+          .refreshBody();
+      } else {
+        this.diamonds
+          .create(diamond.x, diamond.y, "tiles-spritesheet", 44)
+          .setOrigin(0)
+          .refreshBody();
+      }
     });
 
     // Código para a criação dos blocos que o jogador interage
@@ -116,6 +125,12 @@ export default class Game extends Phaser.Scene {
     // Verifica se o jogador caiu no abismo
     if (this.player.y >= 480) {
       this.scene.start("MainMenu");
+    }
+
+    if (game.scale.orientation == Phaser.Scale.LANDSCAPE) {
+      this.player.setScale(1);
+    } else {
+      this.player.setScale(3);
     }
   }
 }
